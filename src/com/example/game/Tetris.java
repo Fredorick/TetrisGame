@@ -1,10 +1,10 @@
 package com.example.game;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 import util.MyButton;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,7 +21,7 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 
 
 {
-	Blocks[][] blocks;
+	private static Blocks[][] blocks;
 	Stack<LifeBlock> st;
 	boolean touched = true;
 	DisplayMetrics display;
@@ -43,6 +43,8 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 	NextField nextField;
 	MyButton menuButoon;
 	DeadBlock currentDeadBlock;
+	Resources res;
+	static MyTimer myTimer;
 	int CurX;
 	int CurY;
 	int score;
@@ -55,8 +57,9 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 		score = 0;
 		count = 0;
 		paint = new Paint();
-		blocks = new Blocks[21][10];
+		blocks = new Blocks[10][21];
 		st = new Stack<LifeBlock>();
+		res = getResources();
 		display = getResources().getDisplayMetrics();
 		width = display.widthPixels;
 		height = display.heightPixels;
@@ -72,12 +75,14 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 		scoreField = new ScoreField(getResources(), scoreFieldrect);
 		buttonRect = new Rect(3*Fieldram,gamefieldheight+Fieldram,width-3*Fieldram,height-Fieldram);
 		menuButoon = new MyButton(getResources(), "Menu");
+		myTimer = new MyTimer(500, 500);
+
 		for(int x = 0; x<10; x++){
 			for(int y = 0; y<21;y++){
-				blocks[y][x] = new Blocks(new Rect(x*blocksize+Fieldram, y*blocksize, x*blocksize+blocksize+Fieldram, y*blocksize+blocksize));
+				blocks[x][y] = new Blocks(new Rect(x*blocksize+Fieldram, y*blocksize, x*blocksize+blocksize+Fieldram, y*blocksize+blocksize));
 			}
 		}
-		addBlocks(new LifeBlock(blocksize,Fieldram));
+		addBlocks(new LifeBlock(blocksize,Fieldram, blocksize, res));
 	}
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -99,10 +104,13 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 		// TODO Auto-generated method stub
 		
 	}
+	public static void Timer(){
+		myTimer.start();
+	}
 	class Motor extends Thread{
 		SurfaceHolder holder = getHolder();
 		public void run (){
-			
+			Timer();
 			//paint.setAntiAlias(true);
 			while(true){
 				Canvas canvas = holder.lockCanvas();
@@ -142,7 +150,7 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 		}*/
 		for(int x = 0; x<10; x++){
 			for(int y = 0; y<21;y++){
-				blocks[y][x].draw(canvas);
+				blocks[x][y].draw(canvas);
 			}
 		}
 		if(st.peek() != null){
@@ -150,26 +158,35 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 		}
 	}
 	public void addBlocks(LifeBlock lifeBlock) {
-			CurX = lifeBlock.GetX();
-			CurY = lifeBlock.GetY();
+
 			if(st.isEmpty()){
 			st.add(lifeBlock);}
 			else{
-			blocks[CurY][CurX] = Die(lifeBlock);
+			CurX = st.peek().GetX();
+			CurY = st.peek().GetY();
+			blocks[CurX][CurY] = Die(st.pop());
 			st.add(lifeBlock);
 			}
+	}
+	static Blocks GetBlocks(int x, int y){
+		Blocks block;
+		try {
+			block = blocks[x][y+1];
+		} catch (ArrayIndexOutOfBoundsException exception) {
+			block = null;
+		}
+		return block;
 	}
 	public DeadBlock Die(LifeBlock lifeBlock){
 		DeadBlock db = new DeadBlock(lifeBlock);
 		return db;
 		
 	}
-	@SuppressWarnings("static-access")
 	@Override
 	public void update(int x) {
 		st.peek().update(x);
 		if((st.peek().CanGo() == false)){
-		addBlocks(new LifeBlock(blocksize,Fieldram));
+		addBlocks(new LifeBlock(blocksize,Fieldram, blocksize, res));
 		}
 		score = (st.peek()).y;
 	}

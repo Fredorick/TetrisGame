@@ -1,5 +1,8 @@
 package com.example.game;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -20,24 +23,23 @@ public class LifeBlock extends Blocks implements IDrawable, IUpdateable, Moveabl
 	int green = (int) (Math.random()*255);
 	int blue = (int) (Math.random()*255);
 	int Fieldram;
-	public LifeBlock (int size, int x){
+	Bitmap bitmap;
+	public LifeBlock (int size, int x, int y, Resources res){
 		super(null);
 		this.size = size;
-		this.x = x+2*size;
+		this.x =x;
 		Fieldram = x;
-		y = 0;
+		this.y = y;
+		bitmap = BitmapFactory.decodeResource(res, R.drawable.bl1);
 		paint = new Paint();
 		paint.setColor(Color.rgb(green, blue, red));		
 		rectblock = new Rect(x, y, size+x, size+y);
-		myTimer = new MyTimer(1000, 1000);
-		myTimer.start();
-	}
-	public void draw(Canvas canvas){
-		canvas.drawRect(x, y, size+x, size+y , paint);
 		
 	}
-	public void Timer(){
-		myTimer.start();
+	public void draw(Canvas canvas){
+		canvas.drawBitmap(bitmap, null, rectblock, paint);
+		//canvas.drawRect(x, y, size+x, size+y , paint);
+		
 	}
 	public boolean CanGo(){
 		if(!canGOB)
@@ -57,13 +59,16 @@ public class LifeBlock extends Blocks implements IDrawable, IUpdateable, Moveabl
 	Rect ReturnNextBlock(){
 		return new Rect(x, y+size, x+size, y+2*size);
 	}
+	Bitmap ReturnBitmap(){
+		return bitmap;
+	}
 	int GetX(){
 		int blocksX = x;
 		blocksX = (blocksX - Fieldram)/size;
 		return blocksX;
 	}
 	int GetY(){
-		int blocksY = x;
+		int blocksY = y;
 		blocksY /= size;
 		return blocksY;
 	}
@@ -81,12 +86,15 @@ public class LifeBlock extends Blocks implements IDrawable, IUpdateable, Moveabl
 		if(GameField.TryBottom(rectblock))
 			 canGOB =  true;		
 		else canGOB = false;
-
+		if(Tetris.GetBlocks(GetX(), GetY()) instanceof Dead){
+			 canGOB =  false;	
+		
+		}
 			if(canGOB){		
-				if (myTimer.finish){
+				if (Tetris.myTimer.finish){
 					y+=size;
-					myTimer.Break();;
-					Timer();
+				    (Tetris.myTimer).Break();;
+					Tetris.Timer();
 				}
 			if(side!=0)
 						if (side>0){  if(canGORight)  x+=size;   }
@@ -94,7 +102,7 @@ public class LifeBlock extends Blocks implements IDrawable, IUpdateable, Moveabl
 			
 			}
 			else{
-			myTimer.cancel();	
+			//Tetris.myTimer.cancel();	
 			}
 		}
 	@Override
