@@ -8,44 +8,40 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class LifeBlock extends Blocks implements IDrawable, IUpdateable, Moveable{
+public class LifeBlock extends Blocks implements Drawable, IUpdateable{
 	int x;
 	int y;
 	int size;
 	Paint paint;
 	Rect rectblock;
-	boolean canGO = true;
-	boolean canGOLeft;
-	boolean canGORight;
-	boolean canGOB;
+	boolean canGOLeft = true;
+	boolean canGORight = true;
+	boolean canGOB = true;
 	MyTimer myTimer;
 	int red = (int) (Math.random()*255);
 	int green = (int) (Math.random()*255);
 	int blue = (int) (Math.random()*255);
-	int Fieldram;
-	Bitmap bitmap;
-	public LifeBlock (int size, int x, int y, Resources res){
+	int Fieldram = Tetris.Fieldram;
+	Bitmap bitmap[] = new Bitmap[8];
+	Figure figure;
+	int id;
+	String numb;
+	int color;
+	public LifeBlock (int size, int x, int y, Resources res, Figure figure, int color){
 		super(null);
 		this.size = size;
-		this.x =x;
-		Fieldram = x;
+		this.x =x+Fieldram;
 		this.y = y;
-		bitmap = BitmapFactory.decodeResource(res, R.drawable.bl1);
-		paint = new Paint();
-		paint.setColor(Color.rgb(green, blue, red));		
+		this.color = color;
+		this.figure = figure;
+		bitmap = drawer.DrawBlocks(color, res, bitmap);
+		paint = new Paint();	
 		rectblock = new Rect(x, y, size+x, size+y);
-		
 	}
 	public void draw(Canvas canvas){
-		canvas.drawBitmap(bitmap, null, rectblock, paint);
+		canvas.drawBitmap(bitmap[color], null, rectblock, paint);
 		//canvas.drawRect(x, y, size+x, size+y , paint);
 		
-	}
-	public boolean CanGo(){
-		if(!canGOB)
-		return false;
-		else
-		return true;
 	}
 	int ReturnSize(){
 		return size;
@@ -60,7 +56,7 @@ public class LifeBlock extends Blocks implements IDrawable, IUpdateable, Moveabl
 		return new Rect(x, y+size, x+size, y+2*size);
 	}
 	Bitmap ReturnBitmap(){
-		return bitmap;
+		return bitmap[color];
 	}
 	int GetX(){
 		int blocksX = x;
@@ -72,29 +68,40 @@ public class LifeBlock extends Blocks implements IDrawable, IUpdateable, Moveabl
 		blocksY /= size;
 		return blocksY;
 	}
-	@Override
-	public void update(int side) {
-		rectblock = new Rect(x, y, size+x, size+y);
-		if(!(GameField.TryLeft(rectblock)))
-			canGOLeft = false;
-		else canGOLeft =  true;
+	void SetX(int x){
+		this.x += x;
+	}
+	void SetY(int y){
+		this.y += y;
+	}
+	void canGo(){
+		if(GameField.TryLeft(rectblock) && !(Tetris.GetLeftBlocks(GetX(), GetY()) instanceof Dead))
+			canGOLeft = true;
+		else canGOLeft =  false;
 		
-		if(!(GameField.TryRight(rectblock)))
-			canGORight = false;
-		else canGORight =  true;
+		if(GameField.TryRight(rectblock) && !(Tetris.GetRightBlocks(GetX(), GetY()) instanceof Dead))
+			canGORight = true;
+		else canGORight =  false;
 		
-		if(GameField.TryBottom(rectblock))
+		if(GameField.TryBottom(rectblock) && !(Tetris.GetBottomBlocks(GetX(), GetY()) instanceof Dead))
 			 canGOB =  true;		
 		else canGOB = false;
-		if(Tetris.GetBlocks(GetX(), GetY()) instanceof Dead){
-			 canGOB =  false;	
 		
+	}
+	@Override
+	public void update(int side, boolean canY) {
+		rectblock = new Rect(x, y, size+x, size+y);
+		canGo();
+		if(!figure.CanLeft){
+			canGOLeft = false;
 		}
+		if(!figure.CanRight){
+			canGORight = false;
+		}
+		
 			if(canGOB){		
-				if (Tetris.myTimer.finish){
+				if (canY){
 					y+=size;
-				    (Tetris.myTimer).Break();;
-					Tetris.Timer();
 				}
 			if(side!=0)
 						if (side>0){  if(canGORight)  x+=size;   }
@@ -102,12 +109,6 @@ public class LifeBlock extends Blocks implements IDrawable, IUpdateable, Moveabl
 			
 			}
 			else{
-			//Tetris.myTimer.cancel();	
 			}
 		}
-	@Override
-	public void moveable() {
-		// TODO Auto-generated method stub
-		
-	}
 }

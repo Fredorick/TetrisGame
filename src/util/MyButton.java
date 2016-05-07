@@ -1,5 +1,6 @@
 package util;
 
+import android.R.menu;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.example.game.Menu;
 import com.example.game.R;
 
 public class MyButton implements OnClickListener {
@@ -28,12 +30,9 @@ public class MyButton implements OnClickListener {
 	}
 	public void draw(Canvas canvas, Rect rect){
 	canvas.drawBitmap(bitmap, null, rect, paint);
-	paint.setTextSize(rect.height()/4);
-	paint.setTextAlign(align);
-	canvas.drawText(text, rect.centerX(), (int)(rect.centerY()*1.1), paint);
 	}
 	@Override
 	public void onClick(View v) {
-	
+	Intent intent = new Intent(v.getContext(), Menu.class);
 	}
 }

@@ -3,9 +3,9 @@ package com.example.game;
 import android.graphics.Canvas;
 
 public class Field {
-	int x, y;
+	TetrisDrawer drawer;
 	public Field() {
-		// TODO Auto-generated constructor stub
+		drawer = new TetrisDrawer();
 	}
 	public void draw(Canvas canvas){
 	}

@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class DeadBlock extends Blocks implements IDrawable, Dead {
+public class DeadBlock extends Blocks implements Drawable, Dead {
 	Rect dedrect;
 	Paint paint;
 	Bitmap bitmap;

@@ -7,19 +7,20 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class GameField extends Field implements IDrawable {
+public class GameField extends Field implements Drawable {
 	Bitmap bitmap;
 	Paint paint;
 	private Rect rect;
-	int size = Tetris.GetBlockSize();
+	int size;
 	static int rectleft;
 	static int rectright;
 	static int rectbottom;
 	static boolean next = false;
 	public GameField(Resources res, Rect rect) {
 		paint = new Paint();
-		bitmap = BitmapFactory.decodeResource(res, R.drawable.fon2);
+		bitmap = drawer.DrawTetrisGameField(res, bitmap);
 		this.rect = rect;
+		size = Tetris.GetBlockSize();
 		rectleft = rect.left;
 		rectright = rect.right;
 		rectbottom = rect.bottom;

@@ -2,7 +2,7 @@ package com.example.game;
 
 import android.graphics.Canvas;
 
-public interface IDrawable {
+public interface Drawable {
 	public void draw(Canvas canvas);
 }
 

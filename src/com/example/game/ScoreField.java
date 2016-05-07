@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
 
-public class ScoreField implements IDrawable {
+public class ScoreField extends Field implements Drawable {
 	public static String textScore;
 	static int score;
 	Bitmap bitmap;
@@ -18,7 +18,7 @@ public class ScoreField implements IDrawable {
 	public ScoreField(Resources res, Rect rect) {
 		textScore = "0";
 		paint = new Paint();
-		bitmap = BitmapFactory.decodeResource(res, R.drawable.fon2);
+		bitmap = drawer.DrawTetrisScoreBox(res, bitmap);
 		this.rect = rect;
 	}
 
