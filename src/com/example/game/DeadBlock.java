@@ -28,4 +28,7 @@ public class DeadBlock extends Blocks implements IDrawable, Dead, IUpdateable {
 		dedrect.top+=y;
 		
 	}
+	public DeadBlock Return(){
+		return this;
+	}
 }

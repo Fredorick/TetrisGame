@@ -204,27 +204,30 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 	}
 	public void Deleting(){
 		x1 = 0;
-		for (int y = 0; y < 21; y++) {
-			for (int x = 0; x < 10; x++){
-				if(blocks[x][y] instanceof Dead){
+		for (int y = 20; y >= 0; y--) {
+			for (int x = 9; x >= 0; x--){
 					try {
-						blocks[x][y+x1] = blocks[x][y];
+						if(blocks[x][y-x1] instanceof Dead)
+						blocks[x][y] = blocks[x][y-x1];
+						else
+						blocks[x][y] = new Blocks(new Rect(x * blocksize + Fieldram, y
+								* blocksize, x * blocksize + blocksize + Fieldram, y
+								* blocksize + blocksize));
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}
-				if(y1[y] == 1){					
-					blocks[x][y] = new Blocks(new Rect(x * blocksize + Fieldram, y
-							* blocksize, x * blocksize + blocksize + Fieldram, y
-							* blocksize + blocksize));				
-				}
-				
 			}
-			if(y1[y] == 1){
-			x1++;}
-			y1[y] = 0;
+			//if(y1[y] == 1){
+			//x1++;}
 		}
+	}
+	public void Clean(){
+		for(int i = 0; i<21;i++){
+			y1[i] = 0;
+			
+		}
+		x1 = 0;
 	}
 	public void addBlocks(int random) {
 		if (figure != null) {
@@ -232,6 +235,7 @@ public class Tetris extends SurfaceView implements IDrawable, IUpdateable, Surfa
 			Transform(figure);
 			Proverka();
 			Deleting();
+			Clean();
 		}
 		random = nextField.GetRandomNextBlock();
 		figure = new Figure(blocksize, blocksize, blocksize, res, random);
