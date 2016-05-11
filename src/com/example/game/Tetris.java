@@ -1,8 +1,15 @@
 package com.example.game;
 
+import interfaces.IDrawable;
+import interfaces.IUpdateable;
 import util.MyButton;
 import util.MyRect;
+import util.OnSwipeTouchListener;
+import util.TetrisDrawer;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,15 +20,17 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.widget.Toast;
 
-public class Tetris extends SurfaceView implements Drawable, IUpdateable, SurfaceHolder.Callback
+public class Tetris extends SurfaceView implements IDrawable, IUpdateable, SurfaceHolder.Callback
 	{
 	private static Blocks[][] blocks;
 	DisplayMetrics display;
 	int side;
 	int width;
 	int height;
+	int[] y1;
+	int x1;
 	static int blocksize;
 	static int Fieldram;
 	int gamefieldheight;
@@ -38,11 +47,11 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 	GameField gameField;
 	ScoreField scoreField;
 	NextField nextField;
-	MyButton menuButoon;
+	MyButton menuButton;
 	DeadBlock currentDeadBlock;
 	Resources res;
 	Figure figure;
-	Canvas canvas;
+	Intent intent;
 	static MyTimer myTimer;
 	int CurX;
 	int CurY;
@@ -51,25 +60,32 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 	int cords[] = new int[8];
 	boolean canY;
 	int random;
-
-	public Tetris(Context context) {
+	SurfaceHolder holder;
+	Canvas canvas;
+	Activity act;
+	@SuppressLint("ShowToast") public Tetris(Context context) {
 		super(context);
+		this.getHolder().addCallback(this);
 		side = 0;
 		score = 0;
 		count = 0;
+		y1 = new int [21];
+		x1 = 0;
 		paint = new Paint();
 		blocks = new Blocks[10][21];
 		drawer = new TetrisDrawer();
 		res = getResources();
-		display = getResources().getDisplayMetrics();
-		width = 1200;
+		holder = getHolder();
+		canvas = holder.lockCanvas();
+		display = res.getDisplayMetrics();
+		width = display.widthPixels;
 		height = display.heightPixels;
 		blocksize = (int) width / 15;
 		Fieldram = (int) width / 60;
-		gamefieldwidth = 10 * blocksize;
+		gamefieldwidth = 10 * blocksize;	
+		intent = new Intent(context, Menu.class);
 		gamefieldheight = (int) (21 * blocksize);
-		rect = new MyRect(Fieldram, gamefieldwidth, gamefieldheight, width,
-				height);
+		rect = new MyRect(Fieldram, gamefieldwidth, gamefieldheight, width, height);
 		gameFieldrect = new Rect(rect.getRect("gamefield", gameFieldrect));
 		gameField = new GameField(getResources(), gameFieldrect);
 		nextFieldrect = new Rect(rect.getRect("nextfield", nextFieldrect));
@@ -78,7 +94,7 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 		scoreField = new ScoreField(getResources(), scoreFieldrect);
 		buttonRect = new Rect(rect.getRect("button", buttonRect));
 		Field = new Rect(rect.getRect("field", Field));
-		menuButoon = new MyButton(getResources(), "Menu");
+		menuButton = new MyButton(getResources(), "Menu", buttonRect );
 		myTimer = new MyTimer(500, 500);
 		canvas = new Canvas();
 		canY = true;
@@ -93,12 +109,7 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 		random = (int) (Math.random() * 7 + 1);
 		addBlocks(random);
 		Timer();
-		
-		  this.setOnTouchListener( new OnSwipeTouchListener(context) { 
-			  public void onSwipeTop() { } 
-			  public void onSwipeRight() { side+=15; } 
-			  public void onSwipeLeft() { side+=15; } 
-			  public void onSwipeBottom() { } });
+		this.setOnTouchListener(Swiper(context));
 
 	}
 
@@ -114,7 +125,7 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
@@ -126,15 +137,11 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 	}
 
 	class TetrisThread extends Thread {
-		SurfaceHolder holder = getHolder();
-
 		public void run() {
 			while (true) {
-				Canvas canvas = holder.lockCanvas();
+				
 				if (canvas != null) {
-					ScoreField.SCupdate(score);
-					draw(canvas);
-					holder.unlockCanvasAndPost(canvas);
+					Do(canvas, holder);
 				}
 				try {
 					Thread.sleep(0);
@@ -142,30 +149,37 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if (myTimer.finish) {
-					canY = true;
-					myTimer.Break();
-					Timer();
-				} else {
-					canY = false;
-				}
-				update(side, canY);
-				side = 0;
+				
 
 			}
 		}
 	}
 
+	void Do(Canvas canvas, SurfaceHolder holder){
+		ScoreField.SCupdate(score);
+		canvas = holder.lockCanvas();
+		draw(canvas);
+		holder.unlockCanvasAndPost(canvas);
+		if (myTimer.finish) {
+			canY = true;
+			myTimer.Break();
+			Timer();
+		} else {
+			canY = false;
+		}
+		update(side, canY);
+		side = 0;
+	}
 	static int GetBlockSize() {
 		return blocksize;
 	}
 
 	public void draw(Canvas canvas) {
 		canvas.drawBitmap(bitmap, null, Field, paint);
-		menuButoon.draw(canvas, buttonRect);
 		nextField.draw(canvas);
 		scoreField.draw(canvas);
 		gameField.draw(canvas);
+		menuButton.draw(canvas);
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 21; y++) {
 				blocks[x][y].draw(canvas);
@@ -175,46 +189,63 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 			figure.draw(canvas);
 		}
 	}
+	public void Proverka(){
 
+			for (int y = 0; y < 21; y++) {
+				for (int x = 0; x < 10; x++){
+				if (blocks[x][y] instanceof Dead)
+				x1++;	
+			}
+				if(x1==10){
+					y1[y]++;
+				}
+				x1 = 0;					
+		}
+	}
+	public void Deleting(){
+		x1 = 0;
+		for (int y = 0; y < 21; y++) {
+			for (int x = 0; x < 10; x++){
+				if(blocks[x][y] instanceof Dead){
+					try {
+						blocks[x][y+x1] = blocks[x][y];
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if(y1[y] == 1){					
+					blocks[x][y] = new Blocks(new Rect(x * blocksize + Fieldram, y
+							* blocksize, x * blocksize + blocksize + Fieldram, y
+							* blocksize + blocksize));				
+				}
+				
+			}
+			if(y1[y] == 1){
+			x1++;}
+			y1[y] = 0;
+		}
+	}
 	public void addBlocks(int random) {
 		if (figure != null) {
+			figure.ResetForm();
 			Transform(figure);
+			Proverka();
+			Deleting();
 		}
 		random = nextField.GetRandomNextBlock();
 		figure = new Figure(blocksize, blocksize, blocksize, res, random);
 		nextField.Nextupdate();
 	}
-
-	static Blocks GetBottomBlocks(int x, int y) {
+	static Blocks GetBlocks(int x, int y) {
 		Blocks block;
 		try {
-			block = blocks[x][y + 1];
+			block = blocks[x][y];
 		} catch (ArrayIndexOutOfBoundsException exception) {
 			block = null;
 		}
 		return block;
 	}
-
-	static Blocks GetLeftBlocks(int x, int y) {
-		Blocks block;
-		try {
-			block = blocks[x - 1][y];
-		} catch (ArrayIndexOutOfBoundsException exception) {
-			block = null;
-		}
-		return block;
-	}
-
-	static Blocks GetRightBlocks(int x, int y) {
-		Blocks block;
-		try {
-			block = blocks[x + 1][y];
-		} catch (ArrayIndexOutOfBoundsException exception) {
-			block = null;
-		}
-		return block;
-	}
-
 	public void Transform(Figure figure) {
 		cords[0] = figure.ReturnBL1().GetX();
 		cords[1] = figure.ReturnBL1().GetY();
@@ -240,7 +271,7 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 	@Override
 	public void update(int x, boolean y) {
 		random = (int) (Math.random() * 6 + 1);
-		if (figure != null) {
+		if (figure != null && figure.CanGo) {
 			figure.update(x, y);
 		}
 		if (!figure.CanGo) {
@@ -248,4 +279,29 @@ public class Tetris extends SurfaceView implements Drawable, IUpdateable, Surfac
 		}
 		score = 100;
 	}
+	OnSwipeTouchListener Swiper(final Context context){
+		return new OnSwipeTouchListener(context, blocksize){ 
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(event.getX() >= buttonRect.left && event.getX() <= buttonRect.left ){
+					if(event.getY() >= buttonRect.top && event.getY() <= buttonRect.bottom)
+								context.startActivity(intent);
+				}
+				return super.onTouch(v, event);
+			}
+			  @Override
+			public void onSwipeLeft() {
+				side--;
+				Do(canvas, holder);
+			}
+			  @Override
+			public void onSwipeRight() {
+				side++;
+				Do(canvas, holder);
+			}
+			public void onSwipeTop() {
+				figure.Turn(0, 0);		
+			}};
 }
+	}

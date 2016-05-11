@@ -1,14 +1,14 @@
 package com.example.game;
 
+import interfaces.IDrawable;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
 
-public class ScoreField extends Field implements Drawable {
+public class ScoreField extends Field implements IDrawable {
 	public static String textScore;
 	static int score;
 	Bitmap bitmap;

@@ -1,13 +1,13 @@
 package com.example.game;
 
+import interfaces.IDrawable;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class GameField extends Field implements Drawable {
+public class GameField extends Field implements IDrawable {
 	Bitmap bitmap;
 	Paint paint;
 	private Rect rect;

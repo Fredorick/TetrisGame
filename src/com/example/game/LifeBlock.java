@@ -1,14 +1,14 @@
 package com.example.game;
 
+import interfaces.IDrawable;
+import interfaces.IUpdateable;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class LifeBlock extends Blocks implements Drawable, IUpdateable{
+public class LifeBlock extends Blocks implements IDrawable, IUpdateable{
 	int x;
 	int y;
 	int size;
@@ -27,14 +27,19 @@ public class LifeBlock extends Blocks implements Drawable, IUpdateable{
 	int id;
 	String numb;
 	int color;
+	int x2, y2;
+	boolean moveable;
 	public LifeBlock (int size, int x, int y, Resources res, Figure figure, int color){
 		super(null);
 		this.size = size;
 		this.x =x+Fieldram;
 		this.y = y;
+		x2= 0;
+		y2= 0;
+		moveable = true;
 		this.color = color;
 		this.figure = figure;
-		bitmap = drawer.DrawBlocks(color, res, bitmap);
+		bitmap = drawer.DrawBlocks(res, bitmap);
 		paint = new Paint();	
 		rectblock = new Rect(x, y, size+x, size+y);
 	}
@@ -68,25 +73,35 @@ public class LifeBlock extends Blocks implements Drawable, IUpdateable{
 		blocksY /= size;
 		return blocksY;
 	}
+	void SetCoods(int x, int y){
+		SetX(x);
+		SetY(y);
+	}
 	void SetX(int x){
-		this.x += x;
+		this.x += x*size;
 	}
 	void SetY(int y){
-		this.y += y;
+		this.y += y*size;
+	}
+	boolean Move(int x1,int y1){
+		moveable= true;
+		if((Tetris.GetBlocks(GetX()+x1, GetY()+y1))  instanceof Dead ) moveable = false;
+		if((Tetris.GetBlocks(GetX()+x1, GetY()+y1))  ==  null) moveable = false;
+		return moveable;
+		
 	}
 	void canGo(){
-		if(GameField.TryLeft(rectblock) && !(Tetris.GetLeftBlocks(GetX(), GetY()) instanceof Dead))
+		if(GameField.TryLeft(rectblock) && !(Tetris.GetBlocks(GetX()-1, GetY()) instanceof Dead))
 			canGOLeft = true;
 		else canGOLeft =  false;
 		
-		if(GameField.TryRight(rectblock) && !(Tetris.GetRightBlocks(GetX(), GetY()) instanceof Dead))
+		if(GameField.TryRight(rectblock) && !(Tetris.GetBlocks(GetX()+1, GetY()) instanceof Dead))
 			canGORight = true;
 		else canGORight =  false;
 		
-		if(GameField.TryBottom(rectblock) && !(Tetris.GetBottomBlocks(GetX(), GetY()) instanceof Dead))
+		if(GameField.TryBottom(rectblock) && !(Tetris.GetBlocks(GetX(), GetY()+1) instanceof Dead))
 			 canGOB =  true;		
-		else canGOB = false;
-		
+		else canGOB = false;	
 	}
 	@Override
 	public void update(int side, boolean canY) {

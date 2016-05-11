@@ -7,7 +7,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_main);
-		setContentView(new Tetris(this));
+		Tetris tetris = new Tetris(this);
+		setContentView(tetris);
 	}
 }

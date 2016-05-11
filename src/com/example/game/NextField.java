@@ -1,13 +1,14 @@
 package com.example.game;
 
+import interfaces.IDrawable;
+import interfaces.IUpdateable;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class NextField extends Field implements Drawable, IUpdateable {
+public class NextField extends Field implements IDrawable, IUpdateable {
 	Bitmap field;
 	Paint paint;
 	Rect rect;
@@ -16,7 +17,7 @@ public class NextField extends Field implements Drawable, IUpdateable {
 	public NextField(Resources res, Rect rect) {
 		paint = new Paint();
 		field  = drawer.DrawTetrisNextBox(res, field);
-		nextbl = drawer.DrawNextBlocks(1, res,nextbl);
+		nextbl = drawer.DrawNextBlocks(res,nextbl);
 		Nextupdate();
 		this.rect = rect;
 	}

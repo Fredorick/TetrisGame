@@ -8,6 +8,10 @@
 package com.example.game;
 
 public final class R {
+    public static final class array {
+        public static final int entries=0x7f050000;
+        public static final int entry_values=0x7f050001;
+    }
     public static final class attr {
     }
     public static final class drawable {
@@ -18,26 +22,30 @@ public final class R {
         public static final int bl5=0x7f020004;
         public static final int bl6=0x7f020005;
         public static final int bl7=0x7f020006;
-        public static final int fon=0x7f020007;
+        public static final int button_toxic=0x7f020007;
         public static final int fon2=0x7f020008;
-        public static final int gamefield_fon=0x7f020009;
-        public static final int gamefield_fonsmall=0x7f02000a;
+        public static final int fon_toxic=0x7f020009;
+        public static final int gamefield_fon_toxic=0x7f02000a;
         public static final int ic_launcher=0x7f02000b;
-        public static final int nextbox=0x7f02000c;
-        public static final int nextbox2=0x7f02000d;
-        public static final int prevbl1=0x7f02000e;
-        public static final int prevbl2=0x7f02000f;
-        public static final int prevbl3=0x7f020010;
-        public static final int prevbl4=0x7f020011;
-        public static final int prevbl5=0x7f020012;
-        public static final int prevbl6=0x7f020013;
-        public static final int prevbl7=0x7f020014;
-        public static final int scorebox=0x7f020015;
-        public static final int scorebox2=0x7f020016;
+        public static final int nextbox_toxic=0x7f02000c;
+        public static final int prevbl1_toxic=0x7f02000d;
+        public static final int prevbl2_toxic=0x7f02000e;
+        public static final int prevbl3_toxic=0x7f02000f;
+        public static final int prevbl4_toxic=0x7f020010;
+        public static final int prevbl5_toxic=0x7f020011;
+        public static final int prevbl6_toxic=0x7f020012;
+        public static final int prevbl7_toxic=0x7f020013;
+        public static final int scorebox_toxic=0x7f020014;
+        public static final int set=0x7f020015;
+    }
+    public static final class id {
+        public static final int MenuButton=0x7f070000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int menu=0x7f030001;
+        public static final int button=0x7f030001;
+        public static final int menu=0x7f030002;
+        public static final int settings=0x7f030003;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
@@ -65,10 +73,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f050000;
+        public static final int AppBaseTheme=0x7f060000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f050001;
+        public static final int AppTheme=0x7f060001;
     }
 }

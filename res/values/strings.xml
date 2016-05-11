@@ -3,5 +3,12 @@
 
     <string name="app_name">Game</string>
     <string name="hello_world">Hello world!</string>
-
+	<string-array name="entries">
+		<item>Classic</item>
+		<item>Toxic</item>
+	</string-array>
+	<string-array name="entry_values">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
 </resources>
