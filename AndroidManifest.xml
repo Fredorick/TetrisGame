@@ -12,18 +12,41 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Retro Mix Reborn"
         >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="com.example.game.Records"
+            android:label="records"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="com.example.game.Splash"
+            android:label="Retro Mix Reborn"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.game.Menu"
+            android:label="menu"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="com.example.game.Settings"
+            android:label="settings"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen" >
         </activity>
     </application>
 

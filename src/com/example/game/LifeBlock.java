@@ -1,5 +1,6 @@
 package com.example.game;
 
+import util.MyTimer;
 import interfaces.IDrawable;
 import interfaces.IUpdateable;
 import android.content.res.Resources;

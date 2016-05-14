@@ -3,6 +3,9 @@
 
     <string name="app_name">Game</string>
     <string name="hello_world">Hello world!</string>
+     <string name="menu">Menu</string>
+      <string name="score">0</string>
+       <string name="spinner">0</string>
 	<string-array name="entries">
 		<item>Classic</item>
 		<item>Toxic</item>

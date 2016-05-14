@@ -1,6 +1,5 @@
 package util;
 
-import interfaces.IDrawable;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,7 +41,7 @@ public class TetrisDrawer extends Drawer {
 		String numb;
 		int id;
 		for(int i = 1; i<=7; i++){
-			numb = "bl" + Integer.toString(i);
+			numb = "bl" + Integer.toString(i)+GetTheme();
 			id = res.getIdentifier(numb, "drawable", "com.example.game");
 			bitmap[i] = BitmapFactory.decodeResource(res, id);
 		}

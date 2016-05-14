@@ -1,9 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/fon_toxic" >
-    
+    android:background="@drawable/fon_toxic"
+    android:id="@+id/menufon"
+    tools:context="${relativePackage}.${activityClass}" >
 
-</LinearLayout>
+    <Button
+        android:id="@+id/records"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="Records"
+        android:background="@drawable/button_toxic"
+        android:textSize="60px"
+        android:textColor="@android:color/white"
+        android:text="Рекорды" />
+
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/records"
+        android:layout_marginTop="38dp"
+        android:background="@drawable/button_toxic"
+        android:onClick="Settings"
+        android:textSize="60px"
+        android:textColor="@android:color/white"
+        android:text="Настройки" />
+
+    <Button
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/records"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="44dp"
+        android:background="@drawable/button_toxic"
+        android:onClick="Play"
+        android:textSize="60px"
+        android:textColor="@android:color/white"
+        android:text="Играть" />
+
+</RelativeLayout>

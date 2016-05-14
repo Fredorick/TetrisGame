@@ -20,8 +20,14 @@ public class Blocks implements IDrawable, IUpdateable {
 	}
 	@Override
 	public void draw(Canvas canvas) {
-		paint.setColor(Color.argb(120, 150, 150, 150));
-		canvas.drawRect(rect, paint);
+		//paint.setColor(Color.argb(120, 150, 150, 150));
+		//canvas.drawRect(rect, paint);
+	}
+	int GetY(){
+		return rect.top/rect.height();
+	}
+	int GetX(){
+		return rect.left/rect.height();
 	}
 	@Override
 	public void update(int x, boolean y) {

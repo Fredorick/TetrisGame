@@ -1,9 +1,9 @@
-package com.example.game;
+package util;
 
 import android.os.CountDownTimer;
 
 public class MyTimer extends CountDownTimer{
-	boolean finish;
+	public boolean finish;
     public MyTimer(long millisInFuture, long countDownInterval){
           super(millisInFuture, countDownInterval);
     }
@@ -13,7 +13,7 @@ public class MyTimer extends CountDownTimer{
     {
     	finish = true;
     }
-    void Break(){
+    public void Break(){
     	finish = false;
     }
     public void onTick(long millisUntilFinished) 
